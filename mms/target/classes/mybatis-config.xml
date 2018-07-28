@@ -12,7 +12,7 @@
     </settings>
 	
 	<typeAliases>
-		<typeAlias type="global.sesoc.mms.dto.Member" alias="Member"/>
+		<typeAlias type="global.sesoc.mms.dto.Members" alias="Members"/>
 	</typeAliases>
 	
 	<mappers>

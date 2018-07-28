@@ -4,7 +4,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import global.sesoc.mms.dto.Member;
+import global.sesoc.mms.dto.Members;
 
 @Repository
 public class MemberRepository {
@@ -17,9 +17,21 @@ public class MemberRepository {
 	 * @param member
 	 * @return int 회원가입처리
 	 */
-	public int join(Member member) {
+	public int insertMember(Members member) {
 		MemberMapper mapper = session.getMapper(MemberMapper.class);		
-		int result = mapper.insert(member);
+		int result = mapper.insertMember(member);
+		
+		return result;
+	}
+
+	/**
+	 * 아이디 중복확인, 로그인
+	 * @param member
+	 * @return 조회된 member
+	 */
+	public Members selectMember(Members member) {
+		MemberMapper mapper = session.getMapper(MemberMapper.class);
+		Members result = mapper.selectMember(member);
 		
 		return result;
 	}
@@ -34,18 +46,6 @@ public class MemberRepository {
 //		int result = mapper.update(member);
 //		
 //		return result;
-//	}
-	
-	/**
-	 * 아이디 중복확인, 로그인
-	 * @param member
-	 * @return 조회된 member
-	 */
-//	public Member selectMember(Member member) {
-//		MemberMapper mapper = session.getMapper(MemberMapper.class);
-//		Member m = mapper.selectOne(member);
-//		
-//		return m;
 //	}
 	
 }

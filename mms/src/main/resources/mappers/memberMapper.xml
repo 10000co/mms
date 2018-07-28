@@ -5,6 +5,31 @@
   
 <mapper namespace="global.sesoc.mms.dao.MemberMapper">
 
-
+	<insert id="insertMember" parameterType="Members">
+		insert into members 
+		values
+		(
+			#{userid},
+			#{userpwd},
+			#{username},
+			#{gender},
+			#{birth},
+			#{phone},
+			#{height},
+			#{weight},
+			#{address}
+		)
+	</insert>
+	
+	<select id="selectMember" resultType="Members">
+		select 
+			*  
+		from 
+			members 
+		where 
+			userid = #{userid}
+		and 
+			userpwd = #{userpwd} 
+	</select>
 
 </mapper>

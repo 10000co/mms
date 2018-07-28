@@ -1,6 +1,6 @@
 package global.sesoc.mms.dto;
 
-public class Member {
+public class Members {
 
 	private String userid;
 	private String userpwd;
@@ -12,9 +12,9 @@ public class Member {
 	private float weight;
 	private String address;
 	
-	public Member() { }
+	public Members() { }
 
-	public Member(String userid, String userpwd, String username, String gender, String birth, String phone,
+	public Members(String userid, String userpwd, String username, String gender, String birth, String phone,
 			float height, float weight, String address) {
 		super();
 		this.userid = userid;

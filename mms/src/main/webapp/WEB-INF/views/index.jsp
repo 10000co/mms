@@ -4,11 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Menu Management System</title>
+<title>MMS</title>
 </head>
 <body>
-
-<h1>이제시작</h1>
-
+	<h1>메인화면</h1>
 </body>
 </html>

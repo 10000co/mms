@@ -1,6 +1,6 @@
 package global.sesoc.mms.dao;
 
-import global.sesoc.mms.dto.Member;
+import global.sesoc.mms.dto.Members;
 
 public interface MemberMapper {
 	
@@ -9,7 +9,7 @@ public interface MemberMapper {
 	 * @param member
 	 * @return
 	 */	
-	public int insert(Member member);
+	public int insertMember(Members member);
 	
 	/**
 	 * 회원정보 수정
@@ -23,5 +23,5 @@ public interface MemberMapper {
 	 * @param member
 	 * @return
 	 */
-//	public Member selectOne(Member member);
+	public Members selectMember(Members member);
 }
