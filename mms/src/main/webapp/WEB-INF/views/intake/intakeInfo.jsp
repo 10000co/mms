@@ -24,97 +24,144 @@
 <!-- Custom Fonts -->
 <link href="style/index/bootstrap/font-awesome.min.css" rel="stylesheet"
 	type="text/css">
-	
+
 <!-- Calendar -->
-<link href='style/intake/bootstrap/fullcalendar.min.css' rel='stylesheet' />
-<link href='style/intake/bootstrap/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+<link href='style/intake/bootstrap/fullcalendar.min.css'
+	rel='stylesheet' />
+<link href='style/intake/bootstrap/fullcalendar.print.min.css'
+	rel='stylesheet' media='print' />
 <script src='script/intake/bootstrap/moment.min.js'></script>
 <script src='script/intake/bootstrap/jquery.min.js'></script>
 <script src='script/intake/bootstrap/fullcalendar.min.js'></script>
 
+<!-- DataTables CSS -->
+<link href="style/intake/bootstrap/dataTables.bootstrap.css"
+	rel="stylesheet">
+
+<!-- DataTables Responsive CSS -->
+<link
+	href="style/intake/bootstrap/dataTables.responsive.css"
+	rel="stylesheet">
+
 <script>
+	var dateTmp = new Date();
 
-  $(document).ready(function() {
+	var year = dateTmp.getFullYear();
+	var month = dateTmp.getMonth() + 1 < 10 ? '0' + (dateTmp.getMonth() + 1)
+			: dateTmp.getMonth() + 1;
+	var day = dateTmp.getDate() < 10 ? '0' + dateTmp.getDate() : dateTmp
+			.getDate();
 
-    $('#calendar').fullCalendar({
-      header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'month,basicWeek,basicDay'
-      },
-      defaultDate: '2018-03-12',
-      navLinks: true, // can click day/week names to navigate views
-      editable: true,
-      eventLimit: true, // allow "more" link when too many events
-      events: [
-        {
-          title: 'All Day Event',
-          start: '2018-03-01'
-        },
-        {
-          title: 'Long Event',
-          start: '2018-03-07',
-          end: '2018-03-10'
-        },
-        {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2018-03-09T16:00:00'
-        },
-        {
-          id: 999,
-          title: 'Repeating Event',
-          start: '2018-03-16T16:00:00'
-        },
-        {
-          title: 'Conference',
-          start: '2018-03-11',
-          end: '2018-03-13'
-        },
-        {
-          title: 'Meeting',
-          start: '2018-03-12T10:30:00',
-          end: '2018-03-12T12:30:00'
-        },
-        {
-          title: 'Lunch',
-          start: '2018-03-12T12:00:00'
-        },
-        {
-          title: 'Meeting',
-          start: '2018-03-12T14:30:00'
-        },
-        {
-          title: 'Happy Hour',
-          start: '2018-03-12T17:30:00'
-        },
-        {
-          title: 'Dinner',
-          start: '2018-03-12T20:00:00'
-        },
-        {
-          title: 'Birthday Party',
-          start: '2018-03-13T07:00:00'
-        },
-        {
-          title: 'Click for Google',
-          url: 'http://google.com/',
-          start: '2018-03-28'
-        }
-      ]
-    });
+	var today = year + "-" + month + "-" + day;
 
-  });
+	$(document).ready(function() {
+		$('#calendar').fullCalendar({
+			header : {
+				left : 'prev,next',
+				center : 'title',
+				right : 'today'
+			},
+			defaultDate : today,
+			navLinks : true,
+			navLinkDayClick : function(date, jsEvent) {
+				console.log('day', date.format('YYYY-MM-DD')); // date is a moment
+				console.log('coords', jsEvent.pageX, jsEvent.pageY);
 
+				var dt = date.format('YYYY-MM-DD');
+				dateClick(dt);
+			},
+			editable : true,
+			eventLimit : true,
+			events : function(start, end, timezone, callback) {
+				var stDate = start.format('YYYY-MM-DD');
+				var edDate = end.format('YYYY-MM-DD');
+				
+				var sendData = [stDate, edDate];
+				
+				$.ajax({
+					method : 'post',
+					url : 'searchIntakeinfo',
+					data : JSON.stringify(sendData),
+					dataType : 'json',
+					contentType : 'application/json; charset=UTF-8',
+					success : function(response) {
+						
+						var events = [];
+						
+						for(var i in response) {
+							var regdt = response[i].regdate.split(" ");
+							
+							events.push({
+								title: response[i].desc_kor,
+								start: regdt[0]
+							});
+						}
+						callback(events);
+					}
+				});				
+			}
+		});	
+		
+		var example_table = $('#dataTables-example').DataTable({
+            responsive: true,
+            serverSide: false,
+            ajax : {
+            	"url" : "selectIntakeinfoGet",
+            	"type" : "GET",
+            	"data" : function(d) {
+            		d.regdate = today;
+            	}
+            },
+            columns : [
+            	{data: "num"},
+            	{data: "fdgrp_nm"},
+            	{data: "nutr_cont1"},
+            	{data: "nutr_cont2"},
+            	{data: "nutr_cont3"},
+            	{data: "nutr_cont4"},
+            	{data: "nutr_cont5"},
+            	{data: "nutr_cont6"},
+            	{data: "nutr_cont7"},
+            	{data: "nutr_cont8"},
+            	{data: "nutr_cont9"}
+            ]
+            
+            
+        });
+	});
+
+	function dateClick(dt) {
+		var dateValue = dt;
+
+		var dateinfo = {
+			"regdate" : dt
+		};
+
+		$.ajax({
+			method : 'post',
+			url : 'selectIntakeinfo',
+			data : JSON.stringify(dateinfo),
+			dataType : 'json',
+			contentType : 'application/json; charset=UTF-8',
+			success : function(response) {
+				if (response != "") {
+					for ( var i in response) {
+						alert(JSON.stringify(response[i]));
+					}
+				} else {
+					alert('null 왔음');
+				}
+
+			}
+		});
+	}
 </script>
 
 <style>
-
-  #calendar {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
+#calendar {
+	max-width: 80%;
+	margin: 0 auto;
+}
 </style>
 
 <title>섭취정보</title>
@@ -171,18 +218,54 @@
 		</nav>
 
 		<div id="page-wrapper">
-			<div id='calendar'></div>
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">식단등록</h1>
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+			<div class="row">
+				<div id='calendar'></div>
+				<!-- /.panel-heading -->
+                <div class="panel-body">
+                	<input class="searchtest" type="button" value="테스트" />
+                    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                        <thead>
+                            <tr>
+                            	<th>번호</th>
+                                <th>식품이름</th>
+                                <th>열량(kcal)</th>
+                                <th>탄수화물(g)</th>
+                                <th>단백질(g)</th>
+                                <th>지방(g)</th>
+                                <th>당류(g)</th>
+                                <th>나트륨(mg)</th>
+                                <th>콜레스테롤(mg)</th>
+                                <th>포화지방산(g)</th>
+                                <th>트랜스지방(g)</th>
+                            </tr>
+                        </thead>
+                        
+                    </table>
+                </div>
+                <!-- /.panel-body -->
+			</div>
 		</div>
-		<!-- /#page-wrapper -->
-		
 	</div>
-	<!-- /#wrapper -->
-
-	<!-- jQuery -->
-<!-- 	<script src="script/common/jquery.min.js"></script> -->
+	<!-- /#page-wrapper -->
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="script/common/bootstrap.min.js"></script>
 
+	<!-- Metis Menu Plugin JavaScript -->
+	<script src="script/intake/bootstrap/metisMenu.min.js"></script>
+
+	<!-- DataTables JavaScript -->
+	<script src="script/intake/bootstrap/jquery.dataTables.min.js"></script>
+	<script src="script/intake/bootstrap/dataTables.bootstrap.min.js"></script>
+	<script src="script/intake/bootstrap/dataTables.responsive.js"></script>
+
+	<!-- Custom Theme JavaScript -->
+	<script src="script/intake/bootstrap/sb-admin-2.js"></script>
 </body>
 </html>
