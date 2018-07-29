@@ -24,7 +24,7 @@ public class MemberController {
 	@RequestMapping(value="signup", method=RequestMethod.GET)
 	public String signup() {
 		
-		return "signup";
+		return "signin/signup";
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class MemberController {
 		
 		repository.insertMember(member);
 		
-		return "index";
+		return "signin/signin";
 	}
 	
 	/**
@@ -47,26 +47,41 @@ public class MemberController {
 	@RequestMapping(value="signin", method=RequestMethod.GET)
 	public String signin() {
 		
-		return "signin";
+		return "signin/signin";
 	}
 	
 	/**
-	 * 로그인 처리
+	 * 로그인
 	 * @return
 	 */
 	@RequestMapping(value="signin", method=RequestMethod.POST)
 	public String signin(Members member, Model model, HttpSession session) {
 		
 		Members m = repository.selectMember(member);
+		String url;
 		
 		if(m != null) {
 			session.setAttribute("loginId", m.getUserid());
 			session.setAttribute("loginName", m.getUsername());
+			
+			url = "index";
+		}
+		else {
+			model.addAttribute("member", member);
+			url = "signin/signin";
 		}
 		
-		model.addAttribute("member", m);
-		
-		return "index";
+		return url;
 	}
 	
+	/**
+	 * 로그아웃
+	 * @return
+	 */
+	@RequestMapping(value="signout", method=RequestMethod.GET)
+	public String signout(HttpSession session) {
+		session.invalidate();
+		
+		return "signin/signin";
+	}
 }

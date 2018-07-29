@@ -4,14 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Sign up</title>
+<title></title>
 <script src="script/common/jquery-3.3.1.min.js"></script>
 <link
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css"
 	rel="stylesheet" id="bootstrap-css">
 <script
 	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<link href="style/login/login.css" type="text/css" rel="stylesheet" />
+<link href="style/signin/login.css" type="text/css" rel="stylesheet" />
 
 <link rel="stylesheet"
 	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -71,7 +71,7 @@
 </script>
 <style>
 .countryCode {
-	width: 140px;
+	width: 100px;
 	height: 28px;
 }
 

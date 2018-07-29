@@ -31,6 +31,7 @@
 		<interceptor>
 		
 			<mapping path="/"/>
+			<mapping path="/intakeInfo"/>
 			
 			<beans:ref bean="loginInterceptor" />
 			
