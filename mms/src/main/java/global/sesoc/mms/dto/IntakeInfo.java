@@ -16,12 +16,13 @@ public class IntakeInfo {
 	private float nutr_cont8;
 	private float nutr_cont9;
 	private String regdate;
+	private String modifyBtn;
 	
 	public IntakeInfo() { }
 
 	public IntakeInfo(long pnum, String userid, long num, String desc_kor, float nutr_cont1, float nutr_cont2,
 			float nutr_cont3, float nutr_cont4, float nutr_cont5, float nutr_cont6, float nutr_cont7, float nutr_cont8,
-			float nutr_cont9, String regdate) {
+			float nutr_cont9, String regdate, String modifyBtn) {
 		super();
 		this.pnum = pnum;
 		this.userid = userid;
@@ -37,6 +38,7 @@ public class IntakeInfo {
 		this.nutr_cont8 = nutr_cont8;
 		this.nutr_cont9 = nutr_cont9;
 		this.regdate = regdate;
+		this.modifyBtn = modifyBtn;
 	}
 
 	public long getPnum() {
@@ -95,6 +97,10 @@ public class IntakeInfo {
 		return regdate;
 	}
 
+	public String getModifyBtn() {
+		return modifyBtn;
+	}
+
 	public void setPnum(long pnum) {
 		this.pnum = pnum;
 	}
@@ -151,13 +157,17 @@ public class IntakeInfo {
 		this.regdate = regdate;
 	}
 
+	public void setModifyBtn(String modifyBtn) {
+		this.modifyBtn = modifyBtn;
+	}
+
 	@Override
 	public String toString() {
 		return "IntakeInfo [pnum=" + pnum + ", userid=" + userid + ", num=" + num + ", desc_kor=" + desc_kor
 				+ ", nutr_cont1=" + nutr_cont1 + ", nutr_cont2=" + nutr_cont2 + ", nutr_cont3=" + nutr_cont3
 				+ ", nutr_cont4=" + nutr_cont4 + ", nutr_cont5=" + nutr_cont5 + ", nutr_cont6=" + nutr_cont6
 				+ ", nutr_cont7=" + nutr_cont7 + ", nutr_cont8=" + nutr_cont8 + ", nutr_cont9=" + nutr_cont9
-				+ ", regdate=" + regdate + "]";
+				+ ", regdate=" + regdate + ", modifyBtn=" + modifyBtn + "]";
 	}
 	
 	

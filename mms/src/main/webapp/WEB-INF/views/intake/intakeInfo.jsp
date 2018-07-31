@@ -53,8 +53,16 @@
 			.getDate();
 
 	var today = year + "-" + month + "-" + day;
+	
+	var regdate = today;
+	
+	var addDate = today;
 
-	$(document).ready(function() {
+	var example_table = "";
+	
+	var preBGcolor = "";
+	
+	$(document).ready(function() {		
 		$('#calendar').fullCalendar({
 			header : {
 				left : 'prev,next',
@@ -67,8 +75,53 @@
 				console.log('day', date.format('YYYY-MM-DD')); // date is a moment
 				console.log('coords', jsEvent.pageX, jsEvent.pageY);
 
+				//#('.fc-day fc-widget-content fc-tue fc-today').css('background-color','red');			
+				
 				var dt = date.format('YYYY-MM-DD');
-				dateClick(dt);
+// 				var preDt = date.format(preBGcolor);
+				
+// 				alert('dt: ' + dt + ', preDt: ' + preDt);
+				
+// 				$('td[data-date=' + dt + ']').css('background-color','#fcf8e3');
+				
+// 				preBGcolor = dt;
+				
+				addDate = dt;
+				regdate = dt;
+				
+				$.ajax({
+					method : 'get',
+					url : 'selectIntakeinfoGet?regdate=' + regdate,
+					contentType : 'application/json; charset=UTF-8',
+					success : function(response) {
+						
+						var ary = JSON.parse(response);
+						var tmp = [];
+						
+						for(var i in ary['aaData']) {
+							 tmp.push(
+								{
+			 						"num" : ary['aaData'][i].num, 
+			 						"desc_kor" : ary['aaData'][i].desc_kor, 
+			 						"nutr_cont1" : ary['aaData'][i].nutr_cont1,
+			 						"nutr_cont2" : ary['aaData'][i].nutr_cont2,
+			 						"nutr_cont3" : ary['aaData'][i].nutr_cont3,
+			 						"nutr_cont4" : ary['aaData'][i].nutr_cont4,
+			 						"nutr_cont5" : ary['aaData'][i].nutr_cont5,
+			 						"nutr_cont6" : ary['aaData'][i].nutr_cont6,
+			 						"nutr_cont7" : ary['aaData'][i].nutr_cont7,
+			 						"nutr_cont8" : ary['aaData'][i].nutr_cont8,
+			 						"nutr_cont9" : ary['aaData'][i].nutr_cont9,
+			 						"modifyBtn" : "<input class='modBtn' type='button' data-pnum='" + ary['aaData'][i].pnum + "'value='삭제' onclick='javascript:modBtnFn(this)' />"
+			 					}
+							);
+						}
+						
+						example_table.clear().draw();
+						example_table.rows.add(tmp);
+						example_table.columns.adjust().draw();
+					}
+				});
 			},
 			editable : true,
 			eventLimit : true,
@@ -100,21 +153,16 @@
 					}
 				});				
 			}
+			
 		});	
 		
-		var example_table = $('#dataTables-example').DataTable({
+		example_table = $('#dataTables-example').DataTable({
             responsive: true,
             serverSide: false,
-            ajax : {
-            	"url" : "selectIntakeinfoGet",
-            	"type" : "GET",
-            	"data" : function(d) {
-            		d.regdate = today;
-            	}
-            },
+            "sAjaxSource": "selectIntakeinfoGet?regdate=" + regdate,
             columns : [
             	{data: "num"},
-            	{data: "fdgrp_nm"},
+            	{data: "desc_kor"},
             	{data: "nutr_cont1"},
             	{data: "nutr_cont2"},
             	{data: "nutr_cont3"},
@@ -123,37 +171,27 @@
             	{data: "nutr_cont6"},
             	{data: "nutr_cont7"},
             	{data: "nutr_cont8"},
-            	{data: "nutr_cont9"}
+            	{data: "nutr_cont9"},
+            	{data: "modifyBtn"}
             ]
             
-            
         });
+		
+		$('#addFood').on('click',addBtnFn);
 	});
-
-	function dateClick(dt) {
-		var dateValue = dt;
-
-		var dateinfo = {
-			"regdate" : dt
-		};
-
-		$.ajax({
-			method : 'post',
-			url : 'selectIntakeinfo',
-			data : JSON.stringify(dateinfo),
-			dataType : 'json',
-			contentType : 'application/json; charset=UTF-8',
-			success : function(response) {
-				if (response != "") {
-					for ( var i in response) {
-						alert(JSON.stringify(response[i]));
-					}
-				} else {
-					alert('null 왔음');
-				}
-
-			}
-		});
+	
+	function addBtnFn() {
+		var url = "intakeInsert?regdate=" + addDate;
+		window.open(url, "intakeInsert", "width=1250,height=500"); 
+	}
+	
+	function modBtnFn(obj) {
+		var url = "intakeModify?pnum=" + $(obj).attr('data-pnum');
+		window.open(url, "intakeModify", "width=500,height=500"); 
+	}
+	
+	function insertIntake(sendData) {
+		alert("결과: " + JSON.stringify(sendData) );
 	}
 </script>
 
@@ -167,6 +205,7 @@
 <title>섭취정보</title>
 </head>
 <body>
+
 	<div id="wrapper">
 
 		<!-- Navigation -->
@@ -228,11 +267,11 @@
 				<div id='calendar'></div>
 				<!-- /.panel-heading -->
                 <div class="panel-body">
-                	<input class="searchtest" type="button" value="테스트" />
+                	<input id="addFood" type="button" value="추가" />
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                         <thead>
                             <tr>
-                            	<th>번호</th>
+                            	<th>식품번호</th>
                                 <th>식품이름</th>
                                 <th>열량(kcal)</th>
                                 <th>탄수화물(g)</th>
@@ -243,17 +282,18 @@
                                 <th>콜레스테롤(mg)</th>
                                 <th>포화지방산(g)</th>
                                 <th>트랜스지방(g)</th>
+                                <th>삭제</th>
                             </tr>
                         </thead>
-                        
                     </table>
+                    
                 </div>
                 <!-- /.panel-body -->
 			</div>
 		</div>
 	</div>
 	<!-- /#page-wrapper -->
-
+	
 	<!-- Bootstrap Core JavaScript -->
 	<script src="script/common/bootstrap.min.js"></script>
 

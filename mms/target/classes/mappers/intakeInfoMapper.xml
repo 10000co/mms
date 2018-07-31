@@ -30,5 +30,64 @@
 		and 
 			#{regdate2} 
 	</select>
+	
+	<select id="selectIntakeInfoTotalCount" resultType="int">
+		select count(*) as total from intakeInfo 
+	</select>
+	
+	<select id="selectFoodCategory" resultType="Foodinfo">
+		select distinct fdgrp_nm from foodinfo 
+	</select>
 
+	<select id="getTotalCount" parameterType="map" resultType="int">
+		select 
+			count(*) 
+		from 
+			foodinfo 
+		where 
+			<choose>
+				<when test="searchItem == 'desc_kor'">desc_kor</when>
+				<when test="searchItem == 'fdgrp_nm'">fdgrp_nm</when>
+			</choose> 
+		like 
+			'%' || #{searchWord} || '%'
+	</select>
+	
+	<select id="searchFoodinfo" parameterType="map" resultType="Foodinfo">
+		select 
+			NUM,
+			FOOD_CD,
+			FDGRP_NM,
+			DESC_KOR,
+			SERVING_WT,
+			NUTR_CONT1,
+			NUTR_CONT2,
+			NUTR_CONT3,
+			NUTR_CONT4,
+			NUTR_CONT5,
+			NUTR_CONT6,
+			NUTR_CONT7,
+			NUTR_CONT8,
+			NUTR_CONT9,
+			ANIMAL_PLANT,
+			BGN_YEAR 
+		from 
+			foodinfo 
+		where 
+			${searchItem} 
+		like 
+			'%' || #{searchWord} || '%' 
+		order by 
+			NUM desc 	
+	</select>
+	
+	<select id="selectIntakeInfoByNum" parameterType="long" resultType="Foodinfo">
+		select 
+			* 
+		from 
+			foodinfo 
+		where 
+			num = #{num} 
+	</select>
+	
 </mapper>

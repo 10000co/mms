@@ -14,13 +14,12 @@
 	<typeAliases>
 		<typeAlias type="global.sesoc.mms.dto.Members" alias="Members"/>
 		<typeAlias type="global.sesoc.mms.dto.IntakeInfo" alias="IntakeInfo"/>
-		<typeAlias type="global.sesoc.mms.dto.data" alias="data"/>
+		<typeAlias type="global.sesoc.mms.dto.Foodinfo" alias="Foodinfo"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="mappers/memberMapper.xml" />
 		<mapper resource="mappers/intakeInfoMapper.xml" />
-		<mapper resource="mappers/dataMapper.xml" />
 	</mappers>
 	
 </configuration>

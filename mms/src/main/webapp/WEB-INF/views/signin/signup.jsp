@@ -88,7 +88,7 @@
 			<div class="col-lg-4 col-md-6 col-sm-8">
 				<div class="row loginbox">
 					<div class="col-lg-12">
-						<span class="singtext">Sign up </span>
+						<span class="singtext">회원가입 </span>
 					</div>
 
 					<div class="col-lg-12 col-md-12 col-sm-12">
