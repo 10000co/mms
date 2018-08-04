@@ -15,8 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.fasterxml.jackson.databind.util.JSONWrappedObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import global.sesoc.mms.dao.IntakeInfoRepository;
 import global.sesoc.mms.dto.Foodinfo;
@@ -58,9 +63,9 @@ public class IntakeInfoController {
 		
 		for(int i=0; i<result.size(); i++) {
 			long pnum = result.get(i).getPnum();
-			String modifyBtn = "<input class='modBtn' type='button' data-pnum='" + pnum + "'value='삭제' onclick='javascript:modBtnFn(this)' />";
+			String delBtn = "<a href='javascript:delBtnFn(\"" + pnum + "\")'><img class='delBtn' src='images/intake/intakeinfo/trash.png' /></a>";
 			
-			result.get(i).setModifyBtn(modifyBtn);
+			result.get(i).setDeleteBtn(delBtn);
 		}
 		
 		int iTotalRecords = repository.selectIntakeInfoTotalCount();
@@ -112,9 +117,6 @@ public class IntakeInfoController {
 	@RequestMapping(value="searchFoodinfo", method=RequestMethod.POST, produces="text/plain;charset=UTF-8")
 	public @ResponseBody String searchFoodinfoByFoodName(@RequestBody Map<String,String> sendData ) {
 		
-		//System.out.println("desc_kor: " + sendData.get("desc_kor"));
-		//System.out.println("fdgrp_nm: " + sendData.get("fdgrp_nm"));
-		
 		List<Foodinfo> list = null;
 		
 		FoodinfoWrapperVO vo = new FoodinfoWrapperVO();
@@ -157,11 +159,28 @@ public class IntakeInfoController {
 	}
 	
 	@RequestMapping(value="selectIntakeInfoByNum", method=RequestMethod.POST)
-	public @ResponseBody Foodinfo selectIntakeInfoByNum( long num )
-	{
+	public @ResponseBody Foodinfo selectIntakeInfoByNum( long num )	{
 		Foodinfo result = repository.selectIntakeInfoByNum(num);
 		
 		return result;
 	}
 	
+	@RequestMapping(value="insertIntake", method=RequestMethod.POST)
+	public @ResponseBody String insertIntake(@RequestBody IntakeInfo sendData, HttpSession session) {
+		//System.out.println(sendData);
+		
+		sendData.setUserid(session.getAttribute("loginId").toString());
+		int result = repository.insertIntake(sendData);
+		
+		return result + "";
+	}
+	
+	@RequestMapping(value="intakeInsertDelete", method=RequestMethod.POST)
+	public @ResponseBody String intakeInsertDelete(@RequestBody String pnum) {
+		
+		long idx = Long.parseLong( pnum.substring(0, pnum.length()-1) );		
+		int result = repository.deleteIntake(idx);
+		
+		return result + "";
+	}
 }

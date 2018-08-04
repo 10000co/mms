@@ -6,6 +6,7 @@ public class IntakeInfo {
 	private String userid;
 	private long num;
 	private String desc_kor;
+	private int gram;
 	private float nutr_cont1;
 	private float nutr_cont2;
 	private float nutr_cont3;
@@ -16,18 +17,19 @@ public class IntakeInfo {
 	private float nutr_cont8;
 	private float nutr_cont9;
 	private String regdate;
-	private String modifyBtn;
+	private String deleteBtn;
 	
 	public IntakeInfo() { }
 
-	public IntakeInfo(long pnum, String userid, long num, String desc_kor, float nutr_cont1, float nutr_cont2,
+	public IntakeInfo(long pnum, String userid, long num, String desc_kor, int gram, float nutr_cont1, float nutr_cont2,
 			float nutr_cont3, float nutr_cont4, float nutr_cont5, float nutr_cont6, float nutr_cont7, float nutr_cont8,
-			float nutr_cont9, String regdate, String modifyBtn) {
+			float nutr_cont9, String regdate, String deleteBtn) {
 		super();
 		this.pnum = pnum;
 		this.userid = userid;
 		this.num = num;
 		this.desc_kor = desc_kor;
+		this.gram = gram;
 		this.nutr_cont1 = nutr_cont1;
 		this.nutr_cont2 = nutr_cont2;
 		this.nutr_cont3 = nutr_cont3;
@@ -38,7 +40,7 @@ public class IntakeInfo {
 		this.nutr_cont8 = nutr_cont8;
 		this.nutr_cont9 = nutr_cont9;
 		this.regdate = regdate;
-		this.modifyBtn = modifyBtn;
+		this.deleteBtn = deleteBtn;
 	}
 
 	public long getPnum() {
@@ -55,6 +57,10 @@ public class IntakeInfo {
 
 	public String getDesc_kor() {
 		return desc_kor;
+	}
+
+	public int getGram() {
+		return gram;
 	}
 
 	public float getNutr_cont1() {
@@ -97,8 +103,8 @@ public class IntakeInfo {
 		return regdate;
 	}
 
-	public String getModifyBtn() {
-		return modifyBtn;
+	public String getDeleteBtn() {
+		return deleteBtn;
 	}
 
 	public void setPnum(long pnum) {
@@ -115,6 +121,10 @@ public class IntakeInfo {
 
 	public void setDesc_kor(String desc_kor) {
 		this.desc_kor = desc_kor;
+	}
+
+	public void setGram(int gram) {
+		this.gram = gram;
 	}
 
 	public void setNutr_cont1(float nutr_cont1) {
@@ -157,18 +167,19 @@ public class IntakeInfo {
 		this.regdate = regdate;
 	}
 
-	public void setModifyBtn(String modifyBtn) {
-		this.modifyBtn = modifyBtn;
+	public void setDeleteBtn(String deleteBtn) {
+		this.deleteBtn = deleteBtn;
 	}
 
 	@Override
 	public String toString() {
-		return "IntakeInfo [pnum=" + pnum + ", userid=" + userid + ", num=" + num + ", desc_kor=" + desc_kor
-				+ ", nutr_cont1=" + nutr_cont1 + ", nutr_cont2=" + nutr_cont2 + ", nutr_cont3=" + nutr_cont3
+		return "IntakeInfo [pnum=" + pnum + ", userid=" + userid + ", num=" + num + ", desc_kor=" + desc_kor + ", gram="
+				+ gram + ", nutr_cont1=" + nutr_cont1 + ", nutr_cont2=" + nutr_cont2 + ", nutr_cont3=" + nutr_cont3
 				+ ", nutr_cont4=" + nutr_cont4 + ", nutr_cont5=" + nutr_cont5 + ", nutr_cont6=" + nutr_cont6
 				+ ", nutr_cont7=" + nutr_cont7 + ", nutr_cont8=" + nutr_cont8 + ", nutr_cont9=" + nutr_cont9
-				+ ", regdate=" + regdate + ", modifyBtn=" + modifyBtn + "]";
+				+ ", regdate=" + regdate + ", deleteBtn=" + deleteBtn + "]";
 	}
+	
 	
 	
 }

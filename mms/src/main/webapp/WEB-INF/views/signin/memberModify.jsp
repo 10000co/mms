@@ -18,58 +18,70 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-	var signupFlag = false;
-
-	function idchk() {
-		var userid = $('#userid').val();
-		var sendData = {
-			"userid" : userid
-		};
+	
+	function init() {
+		var userid = $('input:text[name=userid]');
+		var userpwd = $('input:text[name=userpwd]');
+		var username = $('input:text[name=username]');
+		var gender = $('input:radio[name=gender]');
+		var birth = $('input:text[name=birth]');
+		var countryCode = $('.countryCode');
+		var phone = $('input:text[name=phone]');
+		var height = $('input:text[name=height]');
+		var weight = $('input:text[name=weight]');
+		var address = $('input:text[name=address]');
 		
 		$.ajax({
 			method : 'post',
-			url : 'idOverlapCheck',
-			data : JSON.stringify(sendData),
-			contentType : 'application/json; charset=UTF-8',
+			url : 'selectMemberInfo',
 			dataType : 'json',
 			success : function(response) {
-				//alert(JSON.stringify(response));
+				var phoneArr = response.phone.split('-');
+				var phone1 = phoneArr[0];
+				var phone2 = "";
 				
-				if($('#userid').val().length < 3) {
-					signupFlag = false;
-					var msg = "";
-					
-					msg += '<div class="form-control" style="color:red; text-align:center">';
-					msg += '아이디가 너무 짧습니다. 3자리 이상으로 입력해 주세요.';
-					msg += '</div>';
-					
-					$('#error').html(msg);
-				}
-				else if(response.userid == "") {
-					signupFlag = true;
-					var msg = "";
-					
-					msg += '<div class="form-control" style="color:blue; text-align:center">';
-					msg += '사용할 수 있는 아이디 입니다';
-					msg += '</div>';
-					
-					$('#error').html(msg);
+				if(phoneArr.length > 2) {
+					for(var i=1; i<phoneArr.length; i++) {
+						phone2 += phoneArr[i];
+					}
 				}
 				else {
-					signupFlag = false;
-					var msg = "";
-					
-					msg += '<div class="form-control" style="color:red; text-align:center">';
-					msg += '중복된 아이디 입니다';
-					msg += '</div>';
-					
-					$('#error').html(msg);
+					phone2 = phoneArr[1];
 				}
+				
+				userid.val(response.userid);
+				username.val(response.username);
+				
+				if(response.gender == 'Men') {
+					gender.eq(0).prop('checked', true);
+				}
+				else {
+					gender.eq(1).prop('checked', true);
+				}
+				
+				birth.val(response.birth);
+				
+				for(var i=0; i < countryCode.length; i++) {
+					if(countryCode.eq(i).val() == phone1) {
+						countryCode.eq(i).prop('selected', true);
+						break;
+					}
+				}
+				
+				phone.val(phone2);
+				
+				height.val(response.height);
+				weight.val(response.weight);
+				address.val(response.address);
 			}
 		});
+		
+		
 	}
 
 	$(function() {
+		init();
+		
 		var date = new Date();
 
 		var year = date.getFullYear();
@@ -85,19 +97,8 @@
 			changeYear: true
 		});
 
-		$('#sumitBtn').on('click', submitChk);		
-		$('#userid').keyup('click', idchk);
-		$('input:text[name=phone]').keyup('click', phoneChk)
+		$('#sumitBtn').on('click', submitChk);
 	});
-	
-	function phoneChk() {
-		var phone = $('input:text[name=phone]');
-		
-		if( isNaN(phone.val()) || phone.val().charAt(phone.val().length-1) == ' ' ) {
-			alert("숫자만 입력해 주세요");
-			phone.val(phone.val().replace(/[^0-9]/g,''));	
-		}
-	}
 	
 	// 스크롤 위치 이동
 	function fnMove(seq){
@@ -107,7 +108,6 @@
 
 	function submitChk() {
 		
-		var userid = $('input:text[name=userid]').val();
 		var userpwd = $('input:Password[name=userpwd]').val();
 		var username = $('input:text[name=username]').val();
 		var gender = $('input:radio[name=gender]:checked').val();
@@ -118,21 +118,13 @@
 		var weight = $('input:text[name=weight]').val();
 		var address = $('input:text[name=address]').val();
 		
+		// 공백있는지 확인
+		// 아이디 중복확인 체크(ajax)
+		// 비밀번호 조건추가
+		// 전화번호는 숫자만 들어가도록
 		// 주소는 시간있으면 도로명주소를 적용해보기(도로명주소 지원 공식 API)
 		
-		if(userid == "") {
-			alert("아이디를 입력하세요");
-			$('input:text[name=userid]').focus();
-			fnMove($('input:text[name=userid]'));
-			return;
-		}
-		else if(userid.length < 3) {
-			alert("유저 아이디는 3자 이상으로 입력해 주세요");
-			$('input:text[name=userid]').select();
-			fnMove($('input:text[name=userid]'));
-			return;
-		}
-		else if(userpwd == "") {
+		if(userpwd == "") {
 			alert("비밀번호를 입력하세요");
 			$('input:Password[name=userpwd]').focus();
 			fnMove($('input:Password[name=userpwd]'));
@@ -198,14 +190,7 @@
 		
 		$('input:text[name=phone]').val(phone);
 		
-		if(signupFlag == true) {
-			$('#signupForm').submit();
-		}
-		else {
-			alert("중복된 아이디 입니다");
-			$('input:text[name=userid]').select();
-			fnMove($('input:text[name=userid]'));
-		}
+		$('#signupForm').submit();
 		
 	}
 </script>
@@ -221,21 +206,22 @@
 </style>
 </head>
 <body>
-	<form id="signupForm" action="signup" method="post">
+	
+	<form id="signupForm" action="memberUpdate" method="post">
 		<div class="container">
 
 			<div class="col-lg-4 col-md-3 col-sm-2"></div>
 			<div class="col-lg-4 col-md-6 col-sm-8">
 				<div class="row loginbox">
 					<div class="col-lg-12">
-						<span class="singtext">회원가입 </span>
+						<span class="singtext">회원정보수정 </span>
 					</div>
 					<div id="error" class="col-lg-12  col-md-12 col-sm-12">
 					
 					</div>
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						<input class="form-control" type="text" name="userid" id="userid" 
-							placeholder="ID"><span id="idOverlapChk"></span>
+							placeholder="ID" readonly ><span id="idOverlapChk"></span>
 					</div>
 					<div class="col-lg-12  col-md-12 col-sm-12">
 						<input class="form-control" type="password" name="userpwd" id="userpwd" 
@@ -254,7 +240,7 @@
 					</div>
 					<div class="col-lg-12  col-md-12 col-sm-12">
 						<div class="form-control" align="center">
-							<img src="images/signin/signup/cake.png" />&nbsp;
+							<img src="images/signup/cake.png" />&nbsp;
 							<input name="birth" type="text" size="6" readonly />
 						</div>
 					</div>

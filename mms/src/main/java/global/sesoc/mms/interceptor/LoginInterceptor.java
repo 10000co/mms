@@ -23,7 +23,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		
-		//System.out.println("Interceptor prehandle()");
+//		System.out.println("Interceptor prehandle()");
 		
 		// 로그인 여부 확인
 		HttpSession session = request.getSession();

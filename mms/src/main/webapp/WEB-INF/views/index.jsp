@@ -24,6 +24,27 @@
 <!-- Custom Fonts -->
 <link href="style/index/bootstrap/font-awesome.min.css" rel="stylesheet" type="text/css">
 
+<script>
+	function pwdChk() {
+		var pwd = prompt("비밀번호를 입력하세요","");
+		
+		$.ajax({
+			method : 'POST',
+			url : 'memberChkPwd',
+			data : 'userpwd=' + pwd,
+			dataType : 'json',
+			success : function(response) {
+				if(response.userid == "") {
+					alert("잘못된 비밀번호를 입력하셨습니다");
+				}
+				else {
+					location.href = 'updatePageMove';
+				}
+			}
+		});		
+	}
+</script>
+
 <title>영양관리시스템</title>
 </head>
 <body>
@@ -50,9 +71,7 @@
                         <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        <li><a href="javascript:pwdChk()"><i class="fa fa-user fa-fw"></i> User Profile</a>
                         </li>
                         <li class="divider"></li>
                         <li><a href="${pageContext.request.contextPath}/signout"><i class="fa fa-sign-out fa-fw"></i> Sign out</a>

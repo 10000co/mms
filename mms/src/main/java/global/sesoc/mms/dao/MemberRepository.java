@@ -35,17 +35,26 @@ public class MemberRepository {
 		
 		return result;
 	}
-	
-	/**
-	 * 회원 정보 수정
-	 * @param member
-	 * @return int 회원정보수정
-	 */
-//	public int update(Member member) {
-//		MemberMapper mapper = session.getMapper(MemberMapper.class);
-//		int result = mapper.update(member);
-//		
-//		return result;
-//	}
+
+	public int updateMember(Members member) {
+		MemberMapper mapper = session.getMapper(MemberMapper.class);
+		int result = mapper.updateMember(member);
+		
+		return result;
+	}
+
+	public Members selectMemberInfo(String userid) {
+		MemberMapper mapper = session.getMapper(MemberMapper.class);
+		Members result = mapper.selectMemberInfo(userid);
+		
+		return result;
+	}
+
+	public Members memberChkPwd(Members member) {
+		MemberMapper mapper = session.getMapper(MemberMapper.class);
+		Members result = mapper.selectMember(member);
+		
+		return result;
+	}
 	
 }

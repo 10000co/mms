@@ -72,5 +72,19 @@ public interface IntakeInfoMapper {
 	 */
 	public Foodinfo selectIntakeInfoByNum(long num);
 
+	/**
+	 * 섭취한 음식 정보 등록
+	 * @param sendData
+	 * @return
+	 */
+	public int insertIntake(IntakeInfo sendData);
+
+	/**
+	 * 등록한 음식 정보 삭제
+	 * @param idx
+	 * @return
+	 */
+	public int deleteIntake(long idx);
+
 	
 }

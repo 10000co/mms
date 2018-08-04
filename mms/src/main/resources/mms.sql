@@ -22,6 +22,7 @@ CREATE TABLE intakeInfo(
 	userid		VARCHAR(100) NOT NULL,
 	num			NUMBER,
 	desc_kor	VARCHAR2(2000),
+	gram		NUMBER,
 	nutr_cont1	FLOAT,
 	nutr_cont2	FLOAT,
 	nutr_cont3	FLOAT,

@@ -28,8 +28,35 @@
 			members 
 		where 
 			userid = #{userid}
-		and 
-			userpwd = #{userpwd} 
+		<if test="userpwd != null">
+			and 
+				userpwd = #{userpwd} 
+		</if>
 	</select>
 
+	<update id="updateMember" parameterType="Members">
+		update 
+			members 
+		set 
+			userpwd = #{userpwd},
+			username = #{username},
+			gender = #{gender},
+			birth = #{birth},
+			phone = #{phone},
+			height = #{height},
+			weight = #{weight},
+			address = #{address} 
+		where 
+			userid = #{userid} 
+	</update>
+	
+	<select id="selectMemberInfo" parameterType="string" resultType="Members">
+		select 
+			* 
+		from 
+			members 
+		where 
+			userid = #{userid} 
+	</select>
+	
 </mapper>

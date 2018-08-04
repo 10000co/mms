@@ -24,4 +24,18 @@ public interface MemberMapper {
 	 * @return
 	 */
 	public Members selectMember(Members member);
+
+	/**
+	 * 업데이트
+	 * @param member
+	 * @return
+	 */
+	public int updateMember(Members member);
+
+	/**
+	 * 회원정보 가져오기
+	 * @param userid
+	 * @return
+	 */
+	public Members selectMemberInfo(String userid);
 }

@@ -81,6 +81,24 @@ public class IntakeInfoRepository {
 	}
 
 
+	public int insertIntake(IntakeInfo sendData) {
+		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
+		
+		int result = mapper.insertIntake(sendData);
+		
+		return result;
+	}
+
+
+	public int deleteIntake(long idx) {
+		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
+		
+		int result = mapper.deleteIntake(idx);
+		
+		return result;
+	}
+
+
 	
 	
 	

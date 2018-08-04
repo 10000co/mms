@@ -51,8 +51,22 @@
 	}
 	
 	function calcKcalFn() {
-		var tpVal = $('#nutr_cont1').val().trim();
+		var tpVal = $('#nutr_cont1').val();
 		var regdate = $('#regdate').val();
+		
+		// 숫자 이외에 다른 문자는 입력하지 못하도록 방지
+		
+		if( isNaN(tpVal) || tpVal.charAt(tpVal.length-1) == ' ' || tpVal.indexOf(".") != -1) {
+			alert("숫자만 입력해 주세요 ( 정수만 입력할 수 있습니다 )");
+			$('#nutr_cont1').val(tpVal.replace(/[^0-9]/g,''));
+		}
+		
+		// 정수인지 실수인지 확인
+// 		if(tpVal.indexOf(".") != -1) {
+// 			alert("정수만 입력할 수 있습니다");
+// 			$('#nutr_cont1').val(tpVal.replace(".",""));
+// 			return;
+// 		}
 		
 		if( !isNaN(tpVal) && tpVal != "" ) {
 			var val = parseInt(tpVal);
@@ -85,10 +99,8 @@
 			
 			nutrition_final = {
 				"num" : nutrition_oneGram.num,
-				"food_cd" : nutrition_oneGram.food_cd,
-				"fdgrp_nm" : nutrition_oneGram.fdgrp_nm,
 				"desc_kor" : nutrition_oneGram.desc_kor,
-				"serving_wt" : serving_wt,
+				"gram" :  tpVal,
 				"nutr_cont1" : nutr_cont1.toFixed(2),
 				"nutr_cont2" : nutr_cont2.toFixed(2),
 				"nutr_cont3" : nutr_cont3.toFixed(2),
@@ -98,8 +110,6 @@
 				"nutr_cont7" : nutr_cont7.toFixed(2),
 				"nutr_cont8" : nutr_cont8.toFixed(2),
 				"nutr_cont9" : nutr_cont9.toFixed(2),
-				"animal_plant" : animal_plant,
-				"bgn_year" : bgn_year,
 				"regdate" : regdate
 			}
 			
@@ -119,8 +129,7 @@
 			dataType : 'json',
 			success : function(response) {
 				
-				var gram = $('#nutr_cont1').val(response.serving_wt);
-				var kcal = $('#amount').val(response.nutr_cont1);
+				$('#nutr_cont1').val(response.serving_wt);
 				
 				var setInsert = $('.rs');
 				$('.rs').eq(0).html(response.fdgrp_nm);
@@ -156,21 +165,17 @@
 				
 				nutrition_final = {
 					"num" : response.num,
-					"food_cd" : response.food_cd,
-					"fdgrp_nm" : response.fdgrp_nm,
 					"desc_kor" : response.desc_kor,
-					"serving_wt" : response.serving_wt,
-					"nutr_cont1" : response.nutr_cont1,
-					"nutr_cont2" : response.nutr_cont2,
-					"nutr_cont3" : response.nutr_cont3,
-					"nutr_cont4" : response.nutr_cont4,
-					"nutr_cont5" : response.nutr_cont5,
-					"nutr_cont6" : response.nutr_cont6,
-					"nutr_cont7" : response.nutr_cont7,
-					"nutr_cont8" : response.nutr_cont8,
-					"nutr_cont9" : response.nutr_cont9,
-					"animal_plant" : response.animal_plant,
-					"bgn_year" : response.bgn_year,
+					"gram" : response.serving_wt,
+					"nutr_cont1" : response.nutr_cont1.toFixed(2),
+					"nutr_cont2" : response.nutr_cont2.toFixed(2),
+					"nutr_cont3" : response.nutr_cont3.toFixed(2),
+					"nutr_cont4" : response.nutr_cont4.toFixed(2),
+					"nutr_cont5" : response.nutr_cont5.toFixed(2),
+					"nutr_cont6" : response.nutr_cont6.toFixed(2),
+					"nutr_cont7" : response.nutr_cont7.toFixed(2),
+					"nutr_cont8" : response.nutr_cont8.toFixed(2),
+					"nutr_cont9" : response.nutr_cont9.toFixed(2),
 					"regdate" : regdate
 				}
 				
