@@ -72,10 +72,10 @@ public class IntakeInfoRepository {
 	}
 
 
-	public Foodinfo selectIntakeInfoByNum(long num) {
+	public Foodinfo selectFoodInfoByNum(long num) {
 		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
 		
-		Foodinfo result = mapper.selectIntakeInfoByNum(num);
+		Foodinfo result = mapper.selectFoodInfoByNum(num);
 		
 		return result;
 	}
@@ -99,7 +99,40 @@ public class IntakeInfoRepository {
 	}
 
 
-	
+	public Map<String, Object> kcalStatistics() {
+		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
+		
+		Map<String, Object> result = mapper.kcalStatistics();
+		
+		return result;
+	}
+
+
+	public IntakeInfo selectIntakeInfoByNum(long pnum) {
+		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
+		
+		IntakeInfo result = mapper.selectIntakeInfoByNum(pnum);
+		
+		return result;
+	}
+
+
+	public IntakeInfo selectThreeMajorNutrients() {
+		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
+		
+		IntakeInfo result = mapper.selectThreeMajorNutrients();
+		
+		return result;
+	}
+
+
+	public IntakeInfo ntrInfoTable() {
+		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
+		
+		IntakeInfo result = mapper.ntrInfoTable();
+		
+		return result;
+	}
 	
 	
 }

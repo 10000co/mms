@@ -1,9 +1,11 @@
 package global.sesoc.mms.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -158,9 +160,9 @@ public class IntakeInfoController {
 		return gjb.toJson(vo);
 	}
 	
-	@RequestMapping(value="selectIntakeInfoByNum", method=RequestMethod.POST)
-	public @ResponseBody Foodinfo selectIntakeInfoByNum( long num )	{
-		Foodinfo result = repository.selectIntakeInfoByNum(num);
+	@RequestMapping(value="selectFoodInfoByNum", method=RequestMethod.POST)
+	public @ResponseBody Foodinfo selectFoodInfoByNum( long num )	{
+		Foodinfo result = repository.selectFoodInfoByNum(num);
 		
 		return result;
 	}
@@ -182,5 +184,48 @@ public class IntakeInfoController {
 		int result = repository.deleteIntake(idx);
 		
 		return result + "";
+	}
+	
+	@RequestMapping(value="kcalStatistics", method=RequestMethod.POST)
+	public @ResponseBody List<Map<String,Object>> kcalStatistics() {
+		List<Map<String,Object>> list = new ArrayList<>();
+		Map<String,Object> map = null;
+		
+		Map<String,Object> rs = repository.kcalStatistics();
+		
+		Calendar cal = Calendar.getInstance();
+		
+		int month = cal.get(Calendar.MONTH)+1;
+		
+		int minusIdx = 4;
+		
+		for(int i=minusIdx; i>=0; i--) {			
+			map = new HashMap<>();
+			map.put("month", (month-i)+"월");
+			map.put("Kcal", rs.get("MONTH" + (i+1)).toString());
+			
+			list.add(map);
+		}
+		
+		return list;
+	}
+	
+	@RequestMapping(value="selectIntakeInfoByNum", method=RequestMethod.POST)
+	public @ResponseBody IntakeInfo selectIntakeInfoByNum( long pnum )	{
+		IntakeInfo result = repository.selectIntakeInfoByNum(pnum);
+		return result;
+	}
+	
+	@RequestMapping(value="selectThreeMajorNutrients", method=RequestMethod.POST)
+	public @ResponseBody IntakeInfo selectThreeMajorNutrients() {
+		IntakeInfo result = repository.selectThreeMajorNutrients();
+		return result;
+	}
+	
+	@RequestMapping(value="ntrInfoTable", method=RequestMethod.POST)
+	public @ResponseBody IntakeInfo ntrInfoTable() {
+		IntakeInfo result = repository.ntrInfoTable();
+		System.out.println(result);
+		return result;
 	}
 }

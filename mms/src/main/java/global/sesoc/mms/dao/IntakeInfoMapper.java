@@ -70,7 +70,7 @@ public interface IntakeInfoMapper {
 	 * @param num
 	 * @return
 	 */
-	public Foodinfo selectIntakeInfoByNum(long num);
+	public Foodinfo selectFoodInfoByNum(long num);
 
 	/**
 	 * 섭취한 음식 정보 등록
@@ -86,5 +86,29 @@ public interface IntakeInfoMapper {
 	 */
 	public int deleteIntake(long idx);
 
+	/**
+	 * 평균 칼로리 섭취량(그래프)
+	 * @return
+	 */
+	public Map<String, Object> kcalStatistics();
+
+	/**
+	 * 등록한 정보 검색
+	 * @param pnum
+	 * @return
+	 */
+	public IntakeInfo selectIntakeInfoByNum(long pnum);
+
+	/**
+	 * 3대 영양소 평균 섭취량
+	 * @return
+	 */
+	public IntakeInfo selectThreeMajorNutrients();
+	
+	/**
+	 * 이달의 영양소 평균 섭취량
+	 * @return
+	 */
+	public IntakeInfo ntrInfoTable();
 	
 }

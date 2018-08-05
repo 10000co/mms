@@ -120,7 +120,7 @@
 			NUM desc 	
 	</select>
 	
-	<select id="selectIntakeInfoByNum" parameterType="long" resultType="Foodinfo">
+	<select id="selectFoodInfoByNum" parameterType="long" resultType="Foodinfo">
 		select 
 			* 
 		from 
@@ -134,5 +134,58 @@
 		where 
 			pnum = #{pnum} 
 	</delete>
+	
+	<select id="kcalStatistics" resultType="map">
+		select round(a.kcal, 2) month5, round(b.kcal, 2) month4, round(c.kcal, 2) month3, round(d.kcal, 2) month2, round(e.kcal, 2) month1 from 
+		(select avg(nutr_cont1) kcal from INTAKEINFO where regdate between ADD_MONTHS(TRUNC(sysdate, 'MM'), -4) and ADD_MONTHS(LAST_DAY(sysdate), -4)) a,
+		(select avg(nutr_cont1) kcal from INTAKEINFO where regdate between ADD_MONTHS(TRUNC(sysdate, 'MM'), -3) and ADD_MONTHS(LAST_DAY(sysdate), -3)) b,
+		(select avg(nutr_cont1) kcal from INTAKEINFO where regdate between ADD_MONTHS(TRUNC(sysdate, 'MM'), -2) and ADD_MONTHS(LAST_DAY(sysdate), -2)) c,
+		(select avg(nutr_cont1) kcal from INTAKEINFO where regdate between ADD_MONTHS(TRUNC(sysdate, 'MM'), -1) and ADD_MONTHS(LAST_DAY(sysdate), -1)) d,
+		(select avg(nutr_cont1) kcal from INTAKEINFO where regdate between TRUNC(sysdate, 'MM') and LAST_DAY(sysdate)) e 
+	</select>
+	
+	<select id="selectIntakeInfoByNum" parameterType="long" resultType="IntakeInfo">
+		select 
+			* 
+		from 
+			intakeInfo 
+		where 
+			pnum = #{pnum} 
+	</select>
+	
+	<select id="selectThreeMajorNutrients" resultType="IntakeInfo">
+		select 
+		    round(avg(nutr_cont2),2) as nutr_cont2, 
+		    round(avg(nutr_cont3),2) as nutr_cont3, 
+		    round(avg(nutr_cont4),2) as nutr_cont4 
+		from 
+			intakeInfo 
+		where 
+			regdate 
+		between 
+			TRUNC(sysdate, 'MM') 
+		and
+			LAST_DAY(sysdate) 
+	</select>
+	
+	<select id="ntrInfoTable" resultType="IntakeInfo">
+		select 
+		    round(avg(nutr_cont2),2) as nutr_cont2, 
+		    round(avg(nutr_cont3),2) as nutr_cont3, 
+		    round(avg(nutr_cont4),2) as nutr_cont4, 
+		    round(avg(nutr_cont4),2) as nutr_cont5, 
+		    round(avg(nutr_cont4),2) as nutr_cont6, 
+		    round(avg(nutr_cont4),2) as nutr_cont7, 
+		    round(avg(nutr_cont4),2) as nutr_cont8, 
+		    round(avg(nutr_cont4),2) as nutr_cont9 
+		from 
+			intakeInfo 
+		where 
+			regdate 
+		between 
+			TRUNC(sysdate, 'MM') 
+		and
+			LAST_DAY(sysdate) 	
+	</select>
 	
 </mapper>

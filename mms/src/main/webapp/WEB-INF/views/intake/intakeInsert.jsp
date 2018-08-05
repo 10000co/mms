@@ -7,6 +7,10 @@
 <meta charset="UTF-8">
 <title>등록</title>
 <script src="script/common/jquery-3.3.1.min.js"></script>
+<link href="style/intake/intakeInsert/tableStyle.css" type="text/css" rel="stylesheet" />
+<link href="style/intake/intakeInsert/pagingStyle.css" type="text/css" rel="stylesheet" />
+<link href="style/intake/intakeInsert/selectBtn.css" type="text/css" rel="stylesheet" />
+
 <script>
 	var naviCurrentPage = "";
 	var naviPagePerGroup = "";
@@ -15,31 +19,53 @@
 	var nutrition_oneGram = "";
 	var nutrition_final = "";
 	
+	var preSearchOpt = ""
+	var preSearchText = ""
+	
 	var selectFlag = false;
 	
 	$(function(){
+		$('#searchText').focus();
 		$('#searchBtn').on('click',search);
 		
-		var tagInsert = ""
-		tagInsert += "<tr>"
-		tagInsert += "<td>식품군</td>"
-		tagInsert += "<td>식품이름</td>"
-		tagInsert += "<td>1회제공량(g)</td>"
-		tagInsert += "<td>열량(kcal)</td>"
-		tagInsert += "<td>탄수화물(g)</td>"
-		tagInsert += "<td>단백질(g)</td>"
-		tagInsert += "<td>지방(g)</td>"
-		tagInsert += "<td>당류(g)</td>"
-		tagInsert += "<td>나트륨(mg)</td>"
-		tagInsert += "<td>콜레스테롤(mg)</td>"
-		tagInsert += "<td>포화지방산(g)</td>"
-		tagInsert += "<td>트랜스지방(g)</td>"
-		tagInsert += "<td>가공업체명</td>"
-		tagInsert += "</tr>"
+		var tagInsert = "";
+		tagInsert += "<tr class='w3-red'>";
+		tagInsert += "<th>식품군</th>";
+		tagInsert += "<th>식품이름</th>";
+		tagInsert += "<th>1회제공량(g)</th>";
+		tagInsert += "<th>열량(kcal)</th>";
+		tagInsert += "<th>탄수화물(g)</th>";
+		tagInsert += "<th>단백질(g)</th>";
+		tagInsert += "<th>지방(g)</th>";
+		tagInsert += "<th>당류(g)</th>";
+		tagInsert += "<th>나트륨(mg)</th>";
+		tagInsert += "<th>콜레스테롤(mg)</th>";
+		tagInsert += "<th>포화지방산(g)</th>";
+		tagInsert += "<th>트랜스지방(g)</th>";
+		tagInsert += "<th>가공업체명</th>";
+		tagInsert += "</tr>";
 		
 		$('#searchResult').html(tagInsert);
 		$('#nutr_cont1').keyup(calcKcalFn);
 		$('#insertBtn').on('click',insertData);
+		
+		preSearchOpt = $('#category option:selected').val();
+		preSearchText = $('#searchText').val();
+		
+		$(document).keypress(function(event){
+		    var keycode = (event.keyCode ? event.keyCode : event.which);
+		    
+		    if(keycode == '13'){
+	    		if( $('#nutr_cont1').is(':focus') ) {
+	    			insertData();
+	    		}
+	    		else if( $('#searchText').is(':focus') ) {
+	    			search();
+	    		}
+		    }
+		});
+		
+		search();
 	});
 	
 	function insertData() {
@@ -117,6 +143,9 @@
 	}
 	
 	function getSelectedInfo(obj) {
+		$('html, body').scrollTop(0);
+		$('#nutr_cont1').focus();
+		
 		var sendData = $(obj).attr('data-num');
 		var regdate = $('#regdate').val();
 		
@@ -124,7 +153,7 @@
 		
 		$.ajax({
 			method : 'post',
-			url :  'selectIntakeInfoByNum',
+			url :  'selectFoodInfoByNum',
 			data : 'num='+sendData,
 			dataType : 'json',
 			success : function(response) {
@@ -219,6 +248,7 @@
 				
 			}
 		});
+		
 	}
 	
 	function pageClick(num) {
@@ -267,11 +297,22 @@
 	
 	function search() {		
 		var searchOpt = $('#category option:selected').val();
-		var regdate = $('#regdate').val();
-		var currentPage = $('#currentPage').val();
-		var sendData = "";
-					
 		var searchText = $('#searchText').val();
+		
+		var regdate = $('#regdate').val();
+		
+		var currentPage = $('#currentPage').val();
+		
+		if(searchOpt != preSearchOpt || searchText != preSearchText) {
+			currentPage = 1;
+			$('#currentPage').val(1);
+		}
+		else {
+			currentPage = $('#currentPage').val();
+		}
+		
+		var sendData = "";
+		
 		if(searchOpt == 'desc_kor') {
 			sendData = {
 				"desc_kor" : searchText,
@@ -299,21 +340,21 @@
 				$('#searchResult').html("");
 				
 				var tagInsert = "";
-				tagInsert += "<tr>";
-				tagInsert += "<td>식품군</td>";
-				tagInsert += "<td>식품이름</td>";
-				tagInsert += "<td>1회제공량(g)</td>";
-				tagInsert += "<td>열량(kcal)</td>";
-				tagInsert += "<td>탄수화물(g)</td>";
-				tagInsert += "<td>단백질(g)</td>";
-				tagInsert += "<td>지방(g)</td>";
-				tagInsert += "<td>당류(g)</td>";
-				tagInsert += "<td>나트륨(mg)</td>";
-				tagInsert += "<td>콜레스테롤(mg)</td>";
-				tagInsert += "<td>포화지방산(g)</td>";
-				tagInsert += "<td>트랜스지방(g)</td>";
-				tagInsert += "<td>가공업체명</td>";
-				tagInsert += "<td>선택</td>";
+				tagInsert += "<tr class='w3-red'>";
+				tagInsert += "<th>식품군</th>";
+				tagInsert += "<th>식품이름</th>";
+				tagInsert += "<th>1회제공량(g)</th>";
+				tagInsert += "<th>열량(kcal)</th>";
+				tagInsert += "<th>탄수화물(g)</th>";
+				tagInsert += "<th>단백질(g)</th>";
+				tagInsert += "<th>지방(g)</th>";
+				tagInsert += "<th>당류(g)</th>";
+				tagInsert += "<th>나트륨(mg)</th>";
+				tagInsert += "<th>콜레스테롤(mg)</th>";
+				tagInsert += "<th>포화지방산(g)</th>";
+				tagInsert += "<th>트랜스지방(g)</th>";
+				tagInsert += "<th>가공업체명</th>";
+				tagInsert += "<th>선택</th>";
 				tagInsert += "</tr>";
 				
 				for(var i in response.list) {
@@ -330,106 +371,153 @@
 					tagInsert += "<td>" + response.list[i].nutr_cont7 + "</td>"
 					tagInsert += "<td>" + response.list[i].nutr_cont8 + "</td>"
 					tagInsert += "<td>" + response.list[i].nutr_cont9 + "</td>"
+					
 					if( typeof(response.list[i].animal_plant) != "undefined" ) {
 						tagInsert += "<td>" + response.list[i].animal_plant + "</td>"	
 					}
 					else {
 						tagInsert += "<td>N/A</td>"
 					}
-					tagInsert += "<td><input type='button' data-num=" + response.list[i].num + " value='선택' onclick='javascript:getSelectedInfo(this)' /></td>"
+					tagInsert += "<td><input class='selectBtn selectBtnStyle' type='button' data-num=" + response.list[i].num + " value='선택' onclick='javascript:getSelectedInfo(this)' /></td>"
 					tagInsert += "</tr>"
 					
 					$('#searchResult').html(tagInsert);
 				}
 				
-				var pagingSet = "";
-				pagingSet += '<a href="javascript:move(4)">◁◁</a> ';
-				pagingSet += '<a href="javascript:move(2)">◀</a> ';
-				pagingSet += '&nbsp;&nbsp; ';
-				pagingSet += '<span id="pagingNum"></span> ';
-				pagingSet += '&nbsp;&nbsp; ';
-				pagingSet += '<a href="javascript:move(1)">▶</a> ';
-				pagingSet += '<a href="javascript:move(3)">▷▷</a>';
+				$('.pagination').html("");
 				
-				$('.pagingSet').html(pagingSet);
+				var pagination = "";
+				pagination += '<a href="javascript:move(4)" class="page" >◀◀</a> ';
+				pagination += '<a href="javascript:move(2)" class="page" >◀</a> ';
+				
+				var pagingContent = "";
 				
 				var startIdx = parseInt(response.navi.startPageGroup);
 				var endIdx = parseInt(response.navi.endPageGroup);
-				var currentPage = $('#currentPage').val();
+				var totIdx = parseInt(response.navi.totalPageCount);
+				
+				//alert("endIdx: " + endIdx + ", totIdx: " + totIdx);
+				
+				var spanFlag = false;
+				
+				if(currentPage > totIdx) {
+					currentPage = totIdx;
+				}
+				
+				if(currentPage < 1) {
+					currentPage = 1;
+				} 
 				
 				for( var i=startIdx; i<=endIdx; i++ ) {
-					if(currentPage != i) {
-						$('#pagingNum').append('<a href="javascript:pageClick('+ i +')"> ' + i + ' </a>');
+					if(i != currentPage) {
+						pagingContent += '<a href="javascript:pageClick('+ i +')" class="page"> ' + i + ' </a>';
 					}
 					else {
-						$('#pagingNum').append(' ' + i + ' ');
+						pagingContent += '<span class="page active">' + i + '</span>';
 					}
 				}
+				
+				pagination += pagingContent;
+				
+				pagination += '<a href="javascript:move(1)" class="page" >▶</a> ';
+				pagination += '<a href="javascript:move(3)" class="page" >▶▶</a>';
+				
+				$('.pagination').html(pagination);
+				
+				preSearchOpt = searchOpt;
+				preSearchText = searchText;
 			}
 		});
 		
-		
-		
 	}
+	
 </script>
+<style>
+	#bodyContainer {
+		margin : auto 0;
+		text-align : center;
+	}
+	
+	#category {
+		width: 90px;
+		height: 28px;
+	}
+	
+	#searchText {
+		width: 150px;
+		height: 28px;
+	}
+	
+	#nutr_cont1 {
+		width: 60px;
+		height: 28px;
+	}
+</style>
 </head>
 <body>
 	<input id="regdate" type="hidden" value="${regdate}" />
 	<input id="currentPage" type="hidden" value="1" />
-	
-	그램(g) : <input id="nutr_cont1" type="text" /><br /><br />
-	
-	<hr />
-	
-	<table id="setInsert" border="1">
-		<tr>
-			<td>식품군</td>
-			<td>식품이름</td>
-			<td>열량(kcal)</td>
-			<td>탄수화물(g)</td>
-			<td>단백질(g)</td>
-			<td>지방(g)</td>
-			<td>당류(g)</td>
-			<td>나트륨(mg)</td>
-			<td>콜레스테롤(mg)</td>
-			<td>포화지방산(g)</td>
-			<td>트랜스지방(g)</td>
-		</tr>
-		<tr>
-			<td class="rs"></td>
-			<td class="rs"></td>
-			<td class="rs">0</td>
-			<td class="rs">0</td>
-			<td class="rs">0</td>
-			<td class="rs">0</td>
-			<td class="rs">0</td>
-			<td class="rs">0</td>
-			<td class="rs">0</td>
-			<td class="rs">0</td>
-			<td class="rs">0</td>
-		</tr>
-	</table>
-	
-	<hr />
-	
-	<input id="searchText" type="text" />
-	<select id="category">
-		<optgroup label="기본검색">
-			<option value="desc_kor">식품이름</option>
-		</optgroup>
-		<optgroup label="식품군">
-			<c:forEach var="food" items="${foodCategory}">
-				<option value="${food}">${food}</option>
-			</c:forEach>
-		</optgroup>
-	</select>
-	<input id="searchBtn" type="button" value="검색" />
-	<input id="insertBtn" type="button" value="추가" />
-	
-	<table id="searchResult" border="1"></table>
-	
-	<div class="pagingSet"></div>
-	
+	<div id="bodyContainer">
+		<p>
+			<input id="nutr_cont1" type="text" /> g<br /><br />
+		</p>
+		
+		<div class="w3-responsive">
+			<table class="w3-table-all w3-centered" id="setInsert">
+				<tr class="w3-red">
+					<th>식품군</th>
+					<th>식품이름</th>
+					<th>열량(kcal)</th>
+					<th>탄수화물(g)</th>
+					<th>단백질(g)</th>
+					<th>지방(g)</th>
+					<th>당류(g)</th>
+					<th>나트륨(mg)</th>
+					<th>콜레스테롤(mg)</th>
+					<th>포화지방산(g)</th>
+					<th>트랜스지방(g)</th>
+				</tr>
+				<tr>
+					<td class="rs"></td>
+					<td class="rs"></td>
+					<td class="rs">0</td>
+					<td class="rs">0</td>
+					<td class="rs">0</td>
+					<td class="rs">0</td>
+					<td class="rs">0</td>
+					<td class="rs">0</td>
+					<td class="rs">0</td>
+					<td class="rs">0</td>
+					<td class="rs">0</td>
+				</tr>
+			</table>
+		</div>
+		
+		<br />
+		<p>
+			<input id="searchText" type="text" />
+			<select id="category">
+				<optgroup label="기본검색">
+					<option value="desc_kor">식품이름</option>
+				</optgroup>
+				<optgroup label="식품군">
+					<c:forEach var="food" items="${foodCategory}">
+						<option value="${food}">${food}</option>
+					</c:forEach>
+				</optgroup>
+			</select>
+			<input class="selectBtn selectBtnStyle" id="searchBtn" type="button" value="검색" />
+			<input class="selectBtn selectBtnStyle" id="insertBtn" type="button" value="추가" />
+		</p>
+		
+		<div class="w3-responsive">
+			<table class="w3-table-all" id="searchResult">
+				
+			</table>
+		</div>
+		
+		<div class="pagination"></div>
+	</div>
 </body>
 </html>
 

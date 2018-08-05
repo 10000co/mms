@@ -57,20 +57,65 @@
 	var today = year + "-" + month + "-" + day;
 	
 	var regdate = today;	// 선택된 날짜(fullcalendar)
-	var addDate = today;	// 검색된 날짜(datatables)
 
 	// datatables 지정변수
 	var example_table = "";
 	
 	// fullcalendar 갱신시 필요한 날짜
 	var stDate = "";	// 이번달의 시작 날짜
-	var edDate = "";	// 이번달으 끝 날짜
+	var edDate = "";	// 이번달의 끝 날짜
+	
+	var monthFlag = false; // 이전달로가는지 다음달로 가는지 구분(이전달 : false, 다음달 : true)
 	
 	$(function(){
 		init();
 		
 		$('#addFood').on('click',addBtnFn);
+		$("button.fc-next-button").on('click',getMonthDateNext);	// 다음달 첫날과 마지막날 구하기
+		$("button.fc-prev-button").on('click',getMonthDatePrev);	// 이전달 첫날과 마지막날 구하기
+		
 	});
+	
+	Date.prototype.yyyymmdd = function() {
+        var yyyy = this.getFullYear().toString();
+        var mm = (this.getMonth() + 1).toString();
+        var dd = this.getDate().toString();
+        return yyyy + "-" + (mm[1] ? mm : "0" + mm[0]) + "-" + (dd[1] ? dd : "0" + dd[0]);
+    }
+	
+	function convertDate(date) {
+        var date = new Date(date);
+                	
+        var stDateSub = date.yyyymmdd();
+        var edDateSub = "";
+        var edDay = "";
+        
+		var sp = date.yyyymmdd().split('-');
+		
+		if(monthFlag == false) {
+        	edDay = ( new Date( sp[0], sp[1], 0) ).getDate();
+		}
+		else {
+			edDay = ( new Date( sp[0], sp[1], 0) ).getDate();
+		}
+		
+		edDate = sp[0] + "-" + sp[1] + "-" + edDay;
+        
+//         stDate = stDateSub;
+//         edDate = edDateSub;
+    }
+	
+	function getMonthDateNext() {
+		monthFlag = true;
+        var date = $("#calendar").fullCalendar("getDate");
+        convertDate(date);
+    }
+	
+	function getMonthDatePrev() {
+		monthFlag = false;
+        var date = $("#calendar").fullCalendar("getDate");
+        convertDate(date);
+    }
 	
 	function init() {
 		$('#calendar').fullCalendar({
@@ -88,10 +133,9 @@
 				
 				var dt = date.format('YYYY-MM-DD');
 				
-				addDate = dt;
 				regdate = dt;
 				
-				$('#calendar').fullCalendar('select',dt);
+				$('#calendar').fullCalendar('select',regdate);
 				
 				$.ajax({
 					method : 'get',
@@ -134,8 +178,11 @@
 				});
 			},
 			editable : false,
-			eventLimit : true,
+			eventLimit : false,
 			events : function(start, end, timezone, callback) {
+				
+				$('#calendar').fullCalendar( 'removeEvents' );
+				
 				stDate = start.format('YYYY-MM-DD');
 				edDate = end.format('YYYY-MM-DD');
 				
@@ -155,6 +202,7 @@
 							var regdt = response[i].regdate.split(" ");
 							
 							events.push({
+								id: response[i].pnum,
 								title: response[i].desc_kor,
 								start: regdt[0]
 							});
@@ -192,7 +240,7 @@
 		
 		$('div.dataTables_filter label').css('text-align','right');
 		
-		var addBtn = '<input id="addFood" type="button" value="추가" />';
+		var addBtn = '&nbsp;&nbsp;<a id="addFood" href="#"><img src="images/intake/intakeinfo/add.png" /></a>';
 		$('div.dataTables_filter label').append(addBtn);
 	}
 	
@@ -215,6 +263,7 @@
 					var regdt = response[i].regdate.split(" ");
 					
 					events.push({
+						id: response[i].pnum,
 						title: response[i].desc_kor,
 						start: regdt[0]
 					});
@@ -232,13 +281,29 @@
 	
 	function addBtnFn() {
 		$('#calendar').fullCalendar('select',regdate);
-		var url = "intakeInsert?regdate=" + addDate;
+		var url = "intakeInsert?regdate=" + regdate;
 		window.open(url, "intakeInsert", "width=1250,height=500"); 
 	}
 	
+	function delEvt(pnum) {
+		// 달력에 있는 이벤트 제거
+		$.ajax({
+			method : 'post',
+			url : 'selectIntakeInfoByNum',
+			data : "pnum=" + pnum,
+			dataType : 'json',
+			success : function(response){
+				alert(JSON.stringify(response));
+				alert(response.pnum);
+			}
+		});
+	}
+	
+	// 등록정보 삭제 부분
 	function delBtnFn(pnum) {
 		$('#calendar').fullCalendar('select',regdate);
 		
+		// 이벤트를 직접 DB에서 제거하는 부분
 		$.ajax({
 			method : 'post',
 			url : 'intakeInsertDelete',
@@ -246,12 +311,14 @@
 			dataType : 'text',
 			succsess : function(response) {
 				//alert(response);
+				dataTablesRefresh();
 				
+				delEvt(pnum);
 			}
 		});
 		
-		calendarRefresh();
-		dataTablesRefresh();
+		//calendarRefresh();
+		
 		
 		$.ajax({
 			method : 'get',
@@ -288,6 +355,8 @@
 				
 				$('div.dataTables_filter label').css('text-align','right');
 				
+				
+				$('#calendar').fullCalendar( 'removeEvents', pnum );
 			}
 		});
 
@@ -304,7 +373,6 @@
 			dataType : 'text',
 			success : function(response){
 				
-				calendarRefresh();
 				dataTablesRefresh();
 				
 				$.ajax({
@@ -336,17 +404,26 @@
 							);
 						}
 						
+						$('#calendar').fullCalendar( 'addEventSource', [{
+							title: sendData.desc_kor,
+							start: sendData.regdate
+						}]);
+						
+						//alert(JSON.stringify(tmp));
+						
 						example_table.clear().draw();
 						example_table.rows.add(tmp);
 						example_table.columns.adjust().draw();
 						
-						$('div.dataTables_filter label').css('text-align','right');
+						//$('div.dataTables_filter label').css('text-align','right');
 						
 					}
 				});
 			}
-		});		
+		});
 		
+		
+		$('html, body').scrollTop($(document).height());
 	}	
 	
 	function userinfoMod() {
@@ -409,6 +486,7 @@ div#users-contain table td, div#users-contain table th { border: 1px solid #eee;
 .validateTips { border: 1px solid transparent; padding: 0.3em; }
 
 </style>
+
 <title>섭취정보</title>
 </head>
 <body>
