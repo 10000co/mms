@@ -35,7 +35,6 @@
 			url : 'ntrInfoTable',
 			dataType : 'json',
 			success : function(response){
-				alert(JSON.stringify(response));
 				var rs = "";
 				
 				rs += "<td>" + response.nutr_cont2 + "</td>";

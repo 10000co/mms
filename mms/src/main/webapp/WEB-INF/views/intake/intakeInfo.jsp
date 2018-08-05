@@ -293,8 +293,6 @@
 			data : "pnum=" + pnum,
 			dataType : 'json',
 			success : function(response){
-				alert(JSON.stringify(response));
-				alert(response.pnum);
 			}
 		});
 	}
@@ -310,7 +308,6 @@
 			data : pnum,
 			dataType : 'text',
 			succsess : function(response) {
-				//alert(response);
 				dataTablesRefresh();
 				
 				delEvt(pnum);
@@ -409,8 +406,6 @@
 							start: sendData.regdate
 						}]);
 						
-						//alert(JSON.stringify(tmp));
-						
 						example_table.clear().draw();
 						example_table.rows.add(tmp);
 						example_table.columns.adjust().draw();
@@ -441,7 +436,7 @@
 				contentType : 'application/json; charset=UTF-8',
 				dataType : 'text',
 				success : function(response) {
-					alert(response);
+					
 				}
 			});
 		}		

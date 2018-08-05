@@ -33,7 +33,6 @@
 			contentType : 'application/json; charset=UTF-8',
 			dataType : 'json',
 			success : function(response) {
-				//alert(JSON.stringify(response));
 				
 				if($('#userid').val().length < 3) {
 					signupFlag = false;
