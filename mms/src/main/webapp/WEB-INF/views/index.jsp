@@ -124,7 +124,7 @@
                 </div>
                 <!-- /.sidebar-collapse -->
             </div>
-            <!-- /.navbar-static-side -->
+            <!-- /.navbar-static-side -->  
         </nav>
 
         <div id="page-wrapper">
