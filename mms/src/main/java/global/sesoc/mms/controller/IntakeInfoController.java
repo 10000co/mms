@@ -3,6 +3,7 @@ package global.sesoc.mms.controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,8 +64,13 @@ public class IntakeInfoController {
 		
 		List<IntakeInfo> result = repository.selectIntakeInfo(intakeinfo);
 		
+		for(IntakeInfo rs : result) {
+			System.out.println(rs);
+		}
+		
 		for(int i=0; i<result.size(); i++) {
 			long pnum = result.get(i).getPnum();
+			
 			String delBtn = "<a href='javascript:delBtnFn(\"" + pnum + "\")'><img class='delBtn' src='images/intake/intakeinfo/trash.png' /></a>";
 			
 			result.get(i).setDeleteBtn(delBtn);
@@ -177,7 +183,7 @@ public class IntakeInfoController {
 		return result + "";
 	}
 	
-	@RequestMapping(value="intakeInsertDelete", method=RequestMethod.POST)
+	@RequestMapping(value="intakeInsertDelete", method= {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody String intakeInsertDelete(@RequestBody String pnum) {
 		
 		long idx = Long.parseLong( pnum.substring(0, pnum.length()-1) );		
@@ -186,12 +192,14 @@ public class IntakeInfoController {
 		return result + "";
 	}
 	
-	@RequestMapping(value="kcalStatistics", method=RequestMethod.POST)
-	public @ResponseBody List<Map<String,Object>> kcalStatistics() {
+	@RequestMapping(value="kcalStatistics", method= {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody List<Map<String,Object>> kcalStatistics(HttpSession session) {
+		String userid = (String)session.getAttribute("loginId");
+		
 		List<Map<String,Object>> list = new ArrayList<>();
 		Map<String,Object> map = null;
 		
-		Map<String,Object> rs = repository.kcalStatistics();
+		Map<String,Object> rs = repository.kcalStatistics(userid);
 		
 		Calendar cal = Calendar.getInstance();
 		
@@ -216,15 +224,19 @@ public class IntakeInfoController {
 		return result;
 	}
 	
-	@RequestMapping(value="selectThreeMajorNutrients", method=RequestMethod.POST)
-	public @ResponseBody IntakeInfo selectThreeMajorNutrients() {
-		IntakeInfo result = repository.selectThreeMajorNutrients();
+	@RequestMapping(value="selectThreeMajorNutrients", method= {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody IntakeInfo selectThreeMajorNutrients(HttpSession session) {
+		String userid = (String)session.getAttribute("loginId");
+		
+		IntakeInfo result = repository.selectThreeMajorNutrients(userid);
 		return result;
 	}
 	
-	@RequestMapping(value="ntrInfoTable", method=RequestMethod.POST)
-	public @ResponseBody IntakeInfo ntrInfoTable() {
-		IntakeInfo result = repository.ntrInfoTable();
+	@RequestMapping(value="ntrInfoTable", method= {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody IntakeInfo ntrInfoTable(HttpSession session) {
+		String userid = (String)session.getAttribute("loginId");
+		
+		IntakeInfo result = repository.ntrInfoTable(userid);
 		System.out.println(result);
 		return result;
 	}

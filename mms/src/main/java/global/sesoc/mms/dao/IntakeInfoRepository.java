@@ -99,10 +99,10 @@ public class IntakeInfoRepository {
 	}
 
 
-	public Map<String, Object> kcalStatistics() {
+	public Map<String, Object> kcalStatistics(String userid) {
 		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
 		
-		Map<String, Object> result = mapper.kcalStatistics();
+		Map<String, Object> result = mapper.kcalStatistics(userid);
 		
 		return result;
 	}
@@ -117,19 +117,19 @@ public class IntakeInfoRepository {
 	}
 
 
-	public IntakeInfo selectThreeMajorNutrients() {
+	public IntakeInfo selectThreeMajorNutrients(String userid) {
 		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
 		
-		IntakeInfo result = mapper.selectThreeMajorNutrients();
+		IntakeInfo result = mapper.selectThreeMajorNutrients(userid);
 		
 		return result;
 	}
 
 
-	public IntakeInfo ntrInfoTable() {
+	public IntakeInfo ntrInfoTable(String userid) {
 		IntakeInfoMapper mapper = session.getMapper(IntakeInfoMapper.class);
 		
-		IntakeInfo result = mapper.ntrInfoTable();
+		IntakeInfo result = mapper.ntrInfoTable(userid);
 		
 		return result;
 	}

@@ -13,7 +13,7 @@
 			#{userpwd},
 			#{username},
 			#{gender},
-			#{birth},
+			TO_DATE(#{birth}, 'YYYY-MM-DD'),
 			#{phone},
 			#{height},
 			#{weight},

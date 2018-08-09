@@ -240,7 +240,7 @@
 					</div>
 					<div class="col-lg-12  col-md-12 col-sm-12">
 						<div class="form-control" align="center">
-							<img src="images/signup/cake.png" />&nbsp;
+							<img src="images/signin/signup/cake.png" />&nbsp;
 							<input name="birth" type="text" size="6" readonly />
 						</div>
 					</div>

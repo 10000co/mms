@@ -88,9 +88,10 @@ public interface IntakeInfoMapper {
 
 	/**
 	 * 평균 칼로리 섭취량(그래프)
+	 * @param userid 
 	 * @return
 	 */
-	public Map<String, Object> kcalStatistics();
+	public Map<String, Object> kcalStatistics(String userid);
 
 	/**
 	 * 등록한 정보 검색
@@ -101,14 +102,16 @@ public interface IntakeInfoMapper {
 
 	/**
 	 * 3대 영양소 평균 섭취량
+	 * @param userid 
 	 * @return
 	 */
-	public IntakeInfo selectThreeMajorNutrients();
+	public IntakeInfo selectThreeMajorNutrients(String userid);
 	
 	/**
 	 * 이달의 영양소 평균 섭취량
+	 * @param userid 
 	 * @return
 	 */
-	public IntakeInfo ntrInfoTable();
+	public IntakeInfo ntrInfoTable(String userid);
 	
 }

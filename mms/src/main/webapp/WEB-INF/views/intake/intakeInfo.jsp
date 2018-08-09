@@ -299,7 +299,9 @@
 	
 	// 등록정보 삭제 부분
 	function delBtnFn(pnum) {
-		$('#calendar').fullCalendar('select',regdate);
+		$('#calendar').fullCalendar('select', regdate);
+		
+		//alert(pnum);
 		
 		// 이벤트를 직접 DB에서 제거하는 부분
 		$.ajax({
@@ -341,10 +343,12 @@
 	 						"nutr_cont7" : ary['aaData'][i].nutr_cont7,
 	 						"nutr_cont8" : ary['aaData'][i].nutr_cont8,
 	 						"nutr_cont9" : ary['aaData'][i].nutr_cont9,
-	 						"deleteBtn" : "<a data-pnum='" + ary['aaData'][i].pnum + "' href='javascript:delBtnFn(this)'><img class='delBtn' data-pnum='" + ary['aaData'][i].pnum + "' src='images/intake/intakeinfo/trash.png' /></a>"
+	 						"deleteBtn" : "<a data-pnum='" + ary['aaData'][i].pnum + "' href='javascript:delBtnFn("+ ary['aaData'][i].pnum +")'><img class='delBtn' data-pnum='" + ary['aaData'][i].pnum + "' src='images/intake/intakeinfo/trash.png' /></a>"
 	 					}
 					);
 				}
+				
+// 				example_table.ajax.reload();
 				
 				example_table.clear().draw();
 				example_table.rows.add(tmp);
@@ -396,7 +400,7 @@
 			 						"nutr_cont7" : ary['aaData'][i].nutr_cont7,
 			 						"nutr_cont8" : ary['aaData'][i].nutr_cont8,
 			 						"nutr_cont9" : ary['aaData'][i].nutr_cont9,
-			 						"deleteBtn" : "<a data-pnum='" + ary['aaData'][i].pnum + "' href='javascript:delBtnFn(this)'><img class='delBtn' data-pnum='" + ary['aaData'][i].pnum + "' src='images/intake/intakeinfo/trash.png' /></a>"
+			 						"deleteBtn" : "<a data-pnum='" + ary['aaData'][i].pnum + "' href='javascript:delBtnFn(" + ary['aaData'][i].pnum + ")'><img class='delBtn' data-pnum='" + ary['aaData'][i].pnum + "' src='images/intake/intakeinfo/trash.png' /></a>"
 			 					}
 							);
 						}
